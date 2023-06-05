@@ -12,20 +12,25 @@ class BF_K:
         self.cells = [0]
 
     def _plus(self):
-        self.cells[self.ptr] += 1
+        """opt code for + char"""
+        self.cells[self.ptr] = 0 if self.cells[self.ptr] == 255 else self.cells[self.ptr] + 1
 
     def _minus(self):
-        self.cells[self.ptr] -= 1
+        """opt code for - char"""
+        self.cells[self.ptr] = 255 if self.cells[self.ptr] == 0 else self.cells[self.ptr] - 1
 
     def _cell_r(self):
+        """opt code for > char"""
         self.ptr += 1
         if self.ptr >= len(self.cells):
             self.cells.append(0)
 
     def _cell_l(self):
+        """opt code for < char"""
         self.ptr = self.ptr-1 if self.ptr > 0 else 0
 
     def _loop_l(self):
+        """opt code for [ char"""
         if self.cells[self.ptr] != 0:
             self.stack.append(self.counter)
         else:
@@ -40,18 +45,22 @@ class BF_K:
                 self.counter += 1
 
     def _loop_r(self):
+        """opt code for ] char"""
         if self.cells[self.ptr] != 0:
             self.counter = self.stack[-1]
         else:
             self.stack.pop()
 
     def _out(self):
+        """opt code for . char"""
         print(chr(self.cells[self.ptr]), end="")
 
     def _in(self):
-        self.cells[self.ptr] = input()[0]
+        """opt code for , char"""
+        self.cells[self.ptr] = ord(input()[0])
 
     def run(self):
+        """run each character opt code"""
         while self.counter < len(self.pgm):
             match self.pgm[self.counter]:
                 case "+": self._plus()
@@ -63,17 +72,8 @@ class BF_K:
                 case ".": self._out()
                 case ",": self._in()
                 case _: pass
-            # print(self.pgm[self.counter], self.cells, f"cell={self.ptr}", f"pgm={self.counter}", self.stack)
-            # input()
             self.counter+=1
 
 if __name__ == "__main__":
-
-    # quick hello world tests
-    b = BF_K(">+++++++++[<++++++++>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-] <.#>+++++++++++[<+++++>-]<.>++++++++[<+++>-]<.+++.------.--------.[-]>++++++++[ <++++>-]<+.[-]++++++++++.").run()
-    b = BF_K("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.").run()
-
-    # 7 test
-    b = BF_K("++ > +++++ [< +> -]   ++++ ++++[< +++ +++ > - ]< .").run()
-    print()
+    pass
 
