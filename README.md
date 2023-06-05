@@ -13,6 +13,7 @@ https://en.wikipedia.org/wiki/Brainfuck
 * ","	Accept one byte of input, storing its value in the byte at the data pointer.
 * "["	If the byte at the data pointer is zero, then instead of moving the instruction pointer forward to the next command, jump it forward to the command after the matching ] command.
 * "]"	If the byte at the data pointer is nonzero, then instead of moving the instruction pointer forward to the next command, jump it back to the command after the matching [ command.[a]
+* All other characters are skipped.
 
 ## Usage
 
@@ -26,4 +27,10 @@ b = BF_K("//CODE HERE").run()
 ```
 b = BF_K("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.").run()
 # Hello World!
+
+b = BF_K(">+++++++++[<++++++++>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-] <.#>+++++++++++[<+++++>-]<.>++++++++[<+++>-]<.+++.------.--------.[-]>++++++++[ <++++>-]<+.[-]++++++++++.").run()
+# Hello World!
+
+b = BF_K("++ > +++++ [< +> -]   ++++ ++++[< +++ +++ > - ]< .").run()
+# 7
 ```
