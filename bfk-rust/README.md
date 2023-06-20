@@ -1,5 +1,5 @@
 # bf_k
-A brainf*ck programming language interpreter in Rust
+A brainf*ck programming language interpreter in Rust.
 
 ## Usage
 
