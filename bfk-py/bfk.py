@@ -6,7 +6,7 @@ import sys
 __author__ = "jaschon"
 __copyright__ = "2023"
 
-class BF_K:
+class BFK:
     def __init__(self, pgm):
         self.pgm = pgm
         self.ptr = 0
@@ -78,5 +78,4 @@ class BF_K:
             self.counter+=1
 
 if __name__ == "__main__":
-    pass
-
+    BFK("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.").run()

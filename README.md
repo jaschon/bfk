@@ -1,5 +1,8 @@
-# bf_k
-A brainf*ck programming language interpreter
+# bfk
+A brainf*ck programming language interpreter in multiple languages.
+
+- Python
+- Rust
 
 https://en.wikipedia.org/wiki/Brainfuck
 
@@ -25,24 +28,3 @@ https://en.wikipedia.org/wiki/Brainfuck
 * \[ If the byte at the data pointer is zero, then instead of moving the instruction pointer forward to the next command, jump it forward to the command after the matching ] command.
 * \] If the byte at the data pointer is nonzero, then instead of moving the instruction pointer forward to the next command, jump it back to the command after the matching [ command.
 
-## Usage
-
-```
-BF_K("//CODE HERE").run()
-
-```
-
-### Examples
-
-```
-BF_K("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.").run()
-# Hello World!
-
-BF_K(">+++++++++[<++++++++>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-] <.#>+++++++++++[<+++++>-]<.>++++++++[<+++>-]<.+++.------.--------.[-]>++++++++[ <++++>-]<+.[-]++++++++++.").run()
-# Hello World!
-
-BF_K(">++++++++++>+>+[ [+++++[>++++++++<-]>.<++++++[>--------<-]+<<<]>.>>[ [-]<[>+<-]>>[<<+>+>-]<[>+<-[>+<-[>+<-[>+<-[>+<-[>+<- [>+<-[>+<-[>+<-[>[-]>+>+<<<-[>+<-]]]]]]]]]]]+>>> ]<<< ]").run()
-# 1 1 2 5 8 ....
-# (fibonacci sequence. needs to be forced to stop)
-
-```
