@@ -1,5 +1,5 @@
 # bfk
-A brainf*ck programming language interpreter in multiple languages.
+Brainf*ck programming language interpreter in multiple languages.
 
 - Python
 - Rust
