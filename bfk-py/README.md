@@ -1,9 +1,19 @@
 # bfk
+
 A brainf*ck programming language interpreter in Python.
 
 ## Usage
 
 ```
-BFK("//CODE HERE").run()
+b = BFK("//CODE HERE")
+b.run()
+
+```
+
+## Test
+
+```
+cd test
+pytest .
 
 ```

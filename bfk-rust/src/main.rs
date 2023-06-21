@@ -1,96 +1,106 @@
 use std::io::Read;
+const MEMSIZE: usize = 30000;
 
 fn main() {
    let mut b = BFK::new("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+   // let mut b = BFK::new("+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.");
    b.run();
 }
 
 struct BFK {
     pgm: Vec<char>,
     ptr: usize,
-    counter: usize,
+    pos: usize,
     stack: Vec<usize>,
-    cells: [u8;30000],
+    mem: [i32;MEMSIZE],
 }
 
 
 impl BFK {
 
     fn new(pgm: &str) -> Self {
-        Self { pgm: pgm.chars().collect(), ptr: 0, counter: 0, stack: Vec::new(), cells: [0;30000] }
+        Self { pgm: pgm.chars().collect(), ptr: 0, pos: 0, stack: Vec::new(), mem: [0;MEMSIZE] }
     }
 
     fn plus(&mut self) {
-        self.cells[self.ptr] = if self.cells[self.ptr] < 255 { self.cells[self.ptr] + 1 } else { 0 };
+        self.mem[self.ptr] = if self.mem[self.ptr] == -128 { 127 } else { self.mem[self.ptr] + 1 };
     }
 
     fn minus(&mut self) {
-        self.cells[self.ptr] = if self.cells[self.ptr] > 0 { self.cells[self.ptr] - 1 } else { 255 };
+        self.mem[self.ptr] = if self.mem[self.ptr] == 127 { -128 } else { self.mem[self.ptr] - 1 };
     }
 
-    fn cell_r(&mut self) {
-        self.ptr += 1;
+    fn mem_r(&mut self) {
+        self.ptr = (self.ptr+1) % MEMSIZE
     }
 
-    fn cell_l(&mut self) {
-        self.ptr = if self.ptr > 0 { self.ptr - 1 } else { 0 } ;
+    fn mem_l(&mut self) {
+        self.ptr = (self.ptr-1) % MEMSIZE
     }
 
     fn loop_l(&mut self) {
-        if self.cells[self.ptr] != 0 {
-            self.stack.push(self.counter);
+        if self.mem[self.ptr] != 0 {
+            self.stack.push(self.pos);
         } else {
             let mut stk = vec!();
-            while self.counter < self.pgm.len(){
-                if self.pgm[self.counter] == '[' {
-                    stk.push(self.counter);
-                } else if self.pgm[self.counter] == ']' {
+            while self.pos < self.pgm.len(){
+                if self.pgm[self.pos] == '[' {
+                    stk.push(self.pos);
+                } else if self.pgm[self.pos] == ']' {
                     stk.pop();
                     if stk.len() == 0 {
                         break;
                     }
                 }
-                self.counter += 1
+                self.pos += 1
             }
         }
     }
 
 
     fn loop_r(&mut self) {
-        if self.cells[self.ptr] != 0 {
-            self.counter = self.stack.last().unwrap().clone();
+        if self.mem[self.ptr] != 0 {
+            self.pos = self.stack.last().unwrap().clone();
         } else {
             self.stack.pop();
         }
     }
 
     fn output(&self) {
-        print!("{}", self.cells[self.ptr] as char);
+        print!("{}", self.convert());
+    }
+
+    fn convert(&self) -> char {
+        if self.mem[self.ptr] > -1 {
+            char::from_u32((self.mem[self.ptr] % 65536).try_into().unwrap()).unwrap()
+        } else {
+            char::from_u32((self.mem[self.ptr] + 65536).try_into().unwrap()).unwrap()
+        }
     }
 
     fn input(&mut self) {
-        let input: Option<u8> = std::io::stdin()
+        let input: Option<i32> = std::io::stdin()
             .bytes()
             .next()
             .and_then(|result| result.ok())
-            .map(|byte| byte as u8);
-        self.cells[self.ptr] = input.unwrap_or(0);
+            .map(|byte| byte as i32);
+        self.mem[self.ptr] = input.unwrap_or(0);
     }
 
     fn run(&mut self) {
-        while self.counter < self.pgm.len() {
-            match self.pgm[self.counter] {
+        while self.pos < self.pgm.len() {
+            match self.pgm[self.pos] {
                 '+' => self.plus(),
                 '-' => self.minus(),
-                '<' => self.cell_l(),
-                '>' => self.cell_r(),
+                '<' => self.mem_l(),
+                '>' => self.mem_r(),
                 '[' => self.loop_l(),
                 ']' => self.loop_r(),
                 '.' => self.output(),
                 ',' => self.input(),
                 _ => ()
             }
-            self.counter += 1
+            self.pos += 1
         }
     }
 

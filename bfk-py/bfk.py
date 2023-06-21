@@ -24,11 +24,11 @@ class BFK:
         """opt code for - char"""
         self.mem[self.ptr] = 127 if self.mem[self.ptr] == -128 else self.mem[self.ptr] - 1
 
-    def cell_r(self):
+    def mem_r(self):
         """opt code for > char"""
         self.ptr = (self.ptr+1) % len(self.mem)
 
-    def cell_l(self):
+    def mem_l(self):
         """opt code for < char"""
         self.ptr = (self.ptr-1) % len(self.mem)
 
@@ -75,8 +75,8 @@ class BFK:
         match self.pgm[self.pos]:
             case "+": self.plus()
             case "-": self.minus()
-            case ">": self.cell_r()
-            case "<": self.cell_l()
+            case ">": self.mem_r()
+            case "<": self.mem_l()
             case "[": self.loop_l()
             case "]": self.loop_r()
             case ".": self.output()

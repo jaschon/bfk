@@ -123,42 +123,42 @@ class TestLeftMemShift:
         """Test Mem Left Method"""
         bfk = BFK()
         bfk.ptr = 1
-        bfk.cell_l()
+        bfk.mem_l()
         assert bfk.ptr == 0
 
-    def test_cell_l_run(self):
+    def test_mem_l_run(self):
         """Test Cell Left Run"""
         bfk = BFK("<")
         bfk.ptr = 1
         bfk.run()
         assert bfk.ptr == 0
 
-    def test_cell_l_wrap(self):
+    def test_mem_l_wrap(self):
         """Test Cell Left Wrap"""
         bfk = BFK()
-        bfk.cell_l()
+        bfk.mem_l()
         assert bfk.ptr == len(bfk.mem)-1
 
 class TestRightMemShift:
     """Test Right Mem Shift"""
 
-    def test_cell_r(self):
+    def test_mem_r(self):
         """Test Cell Right Method"""
         bfk = BFK()
-        bfk.cell_r()
+        bfk.mem_r()
         assert bfk.ptr == 1
 
-    def test_cell_r_run(self):
+    def test_mem_r_run(self):
         """Test Cell Right Run"""
         bfk = BFK(">")
         bfk.run()
         assert bfk.ptr == 1
 
-    def test_cell_r_wrap(self):
+    def test_mem_r_wrap(self):
         """Test Cell Right Wrap"""
         bfk = BFK()
         bfk.ptr = len(bfk.mem)-2
-        bfk.cell_r()
+        bfk.mem_r()
         assert bfk.ptr == len(bfk.mem)-1
 
 class TestLoops:
