@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""brainf*ck programming language interpreter"""
 
 import sys
 
@@ -8,30 +9,30 @@ __copyright__ = "2023"
 class BFK:
     """brainf*ck programming language interpreter"""
 
-    def __init__(self, pgm):
+    def __init__(self, pgm=""):
         self.pgm = pgm
         self.pos = 0
         self.ptr = 0
         self.mem = [0]*3000
         self.stack = []
 
-    def _plus(self):
+    def plus(self):
         """opt code for + char"""
         self.mem[self.ptr] = -128 if self.mem[self.ptr] == 127 else self.mem[self.ptr] + 1
 
-    def _minus(self):
+    def minus(self):
         """opt code for - char"""
         self.mem[self.ptr] = 127 if self.mem[self.ptr] == -128 else self.mem[self.ptr] - 1
 
-    def _cell_r(self):
+    def cell_r(self):
         """opt code for > char"""
         self.ptr = (self.ptr+1) % len(self.mem)
 
-    def _cell_l(self):
+    def cell_l(self):
         """opt code for < char"""
         self.ptr = (self.ptr-1) % len(self.mem)
 
-    def _loop_l(self):
+    def loop_l(self):
         """opt code for [ char"""
         if self.mem[self.ptr] != 0:
             self.stack.append(self.pos)
@@ -46,41 +47,41 @@ class BFK:
                         break
                 self.pos += 1
 
-    def _loop_r(self):
+    def loop_r(self):
         """opt code for ] char"""
         if self.mem[self.ptr] != 0:
             self.pos = self.stack[-1]
         else:
             self.stack.pop()
 
-    def _output(self):
+    def output(self):
         """opt code for . char"""
-        print(self._convert(self.mem[self.ptr]), end="")
+        print(self.convert(self.mem[self.ptr]), end="")
 
-    def _input(self):
+    def input(self):
         """opt code for , char"""
         self.mem[self.ptr] = ord(sys.stdin.read(1)) % 127
 
-    def _debug(self):
+    def debug(self):
         """debug info"""
         print(f"\nPOS: {self.pos} PTR: {self.ptr} VAL: {self.mem[self.ptr]}")
 
-    def _convert(self, num):
+    def convert(self, num):
         """converts -128->127 number to utf"""
-        return chr((num % 65536) if num > 0 else num + 65536)
+        return chr((num % 65536) if num > -1 else num + 65536)
 
     def step(self):
         """run single character opt code at pgm pos"""
         match self.pgm[self.pos]:
-            case "+": self._plus()
-            case "-": self._minus()
-            case ">": self._cell_r()
-            case "<": self._cell_l()
-            case "[": self._loop_l()
-            case "]": self._loop_r()
-            case ".": self._output()
-            case ",": self._input()
-            case "#": self._debug()
+            case "+": self.plus()
+            case "-": self.minus()
+            case ">": self.cell_r()
+            case "<": self.cell_l()
+            case "[": self.loop_l()
+            case "]": self.loop_r()
+            case ".": self.output()
+            case ",": self.input()
+            case "#": self.debug()
             case _: pass
         self.pos+=1
 
@@ -88,6 +89,3 @@ class BFK:
         """run pgm code"""
         while self.pos < len(self.pgm):
             self.step()
-     
-if __name__ == "__main__":
-    pass
