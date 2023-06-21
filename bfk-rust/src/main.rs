@@ -2,9 +2,10 @@ use std::io::Read;
 const MEMSIZE: usize = 3000;
 
 fn main() {
-   // let mut b = BFK::new("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
-   let mut b = BFK::new("+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.");
-   b.run();
+    // let mut b = BFK::new("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+    let mut b =
+        BFK::new("+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.");
+    b.run();
 }
 
 struct BFK {
@@ -12,38 +13,54 @@ struct BFK {
     ptr: usize,
     pos: usize,
     stack: Vec<usize>,
-    mem: [i32;MEMSIZE],
+    mem: [i32; MEMSIZE],
 }
 
-
 impl BFK {
-
     fn new(pgm: &str) -> Self {
-        Self { pgm: pgm.chars().collect(), ptr: 0, pos: 0, stack: Vec::new(), mem: [0;MEMSIZE] }
+        Self {
+            pgm: pgm.chars().collect(),
+            ptr: 0,
+            pos: 0,
+            stack: Vec::new(),
+            mem: [0; MEMSIZE],
+        }
     }
 
     fn plus(&mut self) {
-        self.mem[self.ptr] = if self.mem[self.ptr] == 127 { -128 } else { self.mem[self.ptr] + 1 };
+        self.mem[self.ptr] = if self.mem[self.ptr] == 127 {
+            -128
+        } else {
+            self.mem[self.ptr] + 1
+        };
     }
 
     fn minus(&mut self) {
-        self.mem[self.ptr] = if self.mem[self.ptr] == -128 { 127 } else { self.mem[self.ptr] - 1 };
+        self.mem[self.ptr] = if self.mem[self.ptr] == -128 {
+            127
+        } else {
+            self.mem[self.ptr] - 1
+        };
     }
 
     fn mem_r(&mut self) {
-        self.ptr = (self.ptr+1) % MEMSIZE
+        self.ptr = (self.ptr + 1) % MEMSIZE
     }
 
     fn mem_l(&mut self) {
-        self.ptr = if self.ptr == 0 { MEMSIZE - 1 } else { self.ptr - 1 }
+        self.ptr = if self.ptr == 0 {
+            MEMSIZE - 1
+        } else {
+            self.ptr - 1
+        }
     }
 
     fn loop_l(&mut self) {
         if self.mem[self.ptr] != 0 {
             self.stack.push(self.pos);
         } else {
-            let mut stk = vec!();
-            while self.pos < self.pgm.len(){
+            let mut stk = vec![];
+            while self.pos < self.pgm.len() {
                 if self.pgm[self.pos] == '[' {
                     stk.push(self.pos);
                 } else if self.pgm[self.pos] == ']' {
@@ -56,7 +73,6 @@ impl BFK {
             }
         }
     }
-
 
     fn loop_r(&mut self) {
         if self.mem[self.ptr] != 0 {
@@ -98,12 +114,9 @@ impl BFK {
                 ']' => self.loop_r(),
                 '.' => self.output(),
                 ',' => self.input(),
-                _ => ()
+                _ => (),
             }
             self.pos += 1
         }
     }
-
-
-
 }
