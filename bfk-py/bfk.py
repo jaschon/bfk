@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""brainf*ck programming language interpreter"""
 
 import sys
 
@@ -7,75 +6,88 @@ __author__ = "jaschon"
 __copyright__ = "2023"
 
 class BFK:
+    """brainf*ck programming language interpreter"""
+
     def __init__(self, pgm):
         self.pgm = pgm
+        self.pos = 0
         self.ptr = 0
-        self.counter = 0
+        self.mem = [0]*3000
         self.stack = []
-        self.cells = [0]
 
     def _plus(self):
         """opt code for + char"""
-        self.cells[self.ptr] = 0 if self.cells[self.ptr] == 255 else self.cells[self.ptr] + 1
+        self.mem[self.ptr] = -128 if self.mem[self.ptr] == 127 else self.mem[self.ptr] + 1
 
     def _minus(self):
         """opt code for - char"""
-        self.cells[self.ptr] = 255 if self.cells[self.ptr] == 0 else self.cells[self.ptr] - 1
+        self.mem[self.ptr] = 127 if self.mem[self.ptr] == -128 else self.mem[self.ptr] - 1
 
     def _cell_r(self):
         """opt code for > char"""
-        self.ptr += 1
-        if self.ptr >= len(self.cells):
-            self.cells.append(0)
+        self.ptr = (self.ptr+1) % len(self.mem)
 
     def _cell_l(self):
         """opt code for < char"""
-        self.ptr = self.ptr-1 if self.ptr > 0 else 0
+        self.ptr = (self.ptr-1) % len(self.mem)
 
     def _loop_l(self):
         """opt code for [ char"""
-        if self.cells[self.ptr] != 0:
-            self.stack.append(self.counter)
+        if self.mem[self.ptr] != 0:
+            self.stack.append(self.pos)
         else:
             stk = []
-            while self.counter < len(self.pgm):
-                if self.pgm[self.counter] == "[":
-                    stk.append(self.counter)
-                elif self.pgm[self.counter] == "]":
+            while self.pos < len(self.pgm):
+                if self.pgm[self.pos] == "[":
+                    stk.append(self.pos)
+                elif self.pgm[self.pos] == "]":
                     stk.pop()
                     if len(stk) == 0:
                         break
-                self.counter += 1
+                self.pos += 1
 
     def _loop_r(self):
         """opt code for ] char"""
-        if self.cells[self.ptr] != 0:
-            self.counter = self.stack[-1]
+        if self.mem[self.ptr] != 0:
+            self.pos = self.stack[-1]
         else:
             self.stack.pop()
 
-    def _out(self):
+    def _output(self):
         """opt code for . char"""
-        print(chr(self.cells[self.ptr]), end="")
+        print(self._convert(self.mem[self.ptr]), end="")
 
-    def _in(self):
+    def _input(self):
         """opt code for , char"""
-        self.cells[self.ptr] = ord(sys.stdin.read(1))
+        self.mem[self.ptr] = ord(sys.stdin.read(1)) % 127
+
+    def _debug(self):
+        """debug info"""
+        print(f"\nPOS: {self.pos} PTR: {self.ptr} VAL: {self.mem[self.ptr]}")
+
+    def _convert(self, num):
+        """converts -128->127 number to utf"""
+        return chr((num % 65536) if num > 0 else num + 65536)
+
+    def step(self):
+        """run single character opt code at pgm pos"""
+        match self.pgm[self.pos]:
+            case "+": self._plus()
+            case "-": self._minus()
+            case ">": self._cell_r()
+            case "<": self._cell_l()
+            case "[": self._loop_l()
+            case "]": self._loop_r()
+            case ".": self._output()
+            case ",": self._input()
+            case "#": self._debug()
+            case _: pass
+        self.pos+=1
 
     def run(self):
-        """run each character opt code"""
-        while self.counter < len(self.pgm):
-            match self.pgm[self.counter]:
-                case "+": self._plus()
-                case "-": self._minus()
-                case ">": self._cell_r()
-                case "<": self._cell_l()
-                case "[": self._loop_l()
-                case "]": self._loop_r()
-                case ".": self._out()
-                case ",": self._in()
-                case _: pass
-            self.counter+=1
-
+        """run pgm code"""
+        while self.pos < len(self.pgm):
+            self.step()
+     
 if __name__ == "__main__":
-    BFK("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.").run()
+    pass
