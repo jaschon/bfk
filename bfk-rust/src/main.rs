@@ -21,11 +21,11 @@ impl BFK {
     }
 
     fn plus(&mut self) {
-        self.cells[self.ptr] = if self.cells[self.ptr] < 127 { self.cells[self.ptr] + 1 } else { 0 };
+        self.cells[self.ptr] = if self.cells[self.ptr] < 255 { self.cells[self.ptr] + 1 } else { 0 };
     }
 
     fn minus(&mut self) {
-        self.cells[self.ptr] = if self.cells[self.ptr] > 0 { self.cells[self.ptr] - 1 } else { 127 };
+        self.cells[self.ptr] = if self.cells[self.ptr] > 0 { self.cells[self.ptr] - 1 } else { 255 };
     }
 
     fn cell_r(&mut self) {
