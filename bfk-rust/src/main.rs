@@ -1,9 +1,9 @@
 use std::io::Read;
-const MEMSIZE: usize = 30000;
+const MEMSIZE: usize = 3000;
 
 fn main() {
-   let mut b = BFK::new("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
-   // let mut b = BFK::new("+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.");
+   // let mut b = BFK::new("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+   let mut b = BFK::new("+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.");
    b.run();
 }
 
@@ -23,11 +23,11 @@ impl BFK {
     }
 
     fn plus(&mut self) {
-        self.mem[self.ptr] = if self.mem[self.ptr] == -128 { 127 } else { self.mem[self.ptr] + 1 };
+        self.mem[self.ptr] = if self.mem[self.ptr] == 127 { -128 } else { self.mem[self.ptr] + 1 };
     }
 
     fn minus(&mut self) {
-        self.mem[self.ptr] = if self.mem[self.ptr] == 127 { -128 } else { self.mem[self.ptr] - 1 };
+        self.mem[self.ptr] = if self.mem[self.ptr] == -128 { 127 } else { self.mem[self.ptr] - 1 };
     }
 
     fn mem_r(&mut self) {
@@ -35,7 +35,7 @@ impl BFK {
     }
 
     fn mem_l(&mut self) {
-        self.ptr = (self.ptr-1) % MEMSIZE
+        self.ptr = if self.ptr == 0 { MEMSIZE - 1 } else { self.ptr - 1 }
     }
 
     fn loop_l(&mut self) {
