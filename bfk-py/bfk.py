@@ -16,11 +16,11 @@ class BFK:
 
     def _plus(self):
         """opt code for + char"""
-        self.cells[self.ptr] = 0 if self.cells[self.ptr] == 127 else self.cells[self.ptr] + 1
+        self.cells[self.ptr] = 0 if self.cells[self.ptr] == 255 else self.cells[self.ptr] + 1
 
     def _minus(self):
         """opt code for - char"""
-        self.cells[self.ptr] = 127 if self.cells[self.ptr] == 0 else self.cells[self.ptr] - 1
+        self.cells[self.ptr] = 255 if self.cells[self.ptr] == 0 else self.cells[self.ptr] - 1
 
     def _cell_r(self):
         """opt code for > char"""
