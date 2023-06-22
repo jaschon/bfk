@@ -7,7 +7,7 @@ __author__ = "jaschon"
 __copyright__ = "2023"
 
 class BFK:
-    """brainf*ck programming language interpreter"""
+    """Load, Process Program Code"""
 
     def __init__(self, pgm=""):
         self.pgm = pgm
@@ -17,23 +17,23 @@ class BFK:
         self.stack = []
 
     def plus(self):
-        """opt code for + char"""
+        """opcode for + char"""
         self.mem[self.ptr] = -128 if self.mem[self.ptr] == 127 else self.mem[self.ptr] + 1
 
     def minus(self):
-        """opt code for - char"""
+        """opcode for - char"""
         self.mem[self.ptr] = 127 if self.mem[self.ptr] == -128 else self.mem[self.ptr] - 1
 
     def mem_r(self):
-        """opt code for > char"""
+        """opcode for > char"""
         self.ptr = (self.ptr+1) % len(self.mem)
 
     def mem_l(self):
-        """opt code for < char"""
+        """opcode for < char"""
         self.ptr = (self.ptr-1) % len(self.mem)
 
     def loop_l(self):
-        """opt code for [ char"""
+        """opcode for [ char"""
         if self.mem[self.ptr] != 0:
             self.stack.append(self.pos)
         else:
@@ -48,18 +48,18 @@ class BFK:
                 self.pos += 1
 
     def loop_r(self):
-        """opt code for ] char"""
+        """opcode for ] char"""
         if self.mem[self.ptr] != 0:
             self.pos = self.stack[-1]
         else:
             self.stack.pop()
 
     def output(self):
-        """opt code for . char"""
+        """opcode for . char"""
         print(self.convert(self.mem[self.ptr]), end="")
 
     def input(self):
-        """opt code for , char"""
+        """opcode for , char"""
         self.mem[self.ptr] = ord(sys.stdin.read(1)) % 127
 
     def debug(self):
@@ -71,7 +71,7 @@ class BFK:
         return chr((num % 65536) if num > -1 else num + 65536)
 
     def step(self):
-        """run single character opt code at pgm pos"""
+        """run single character opcode at pgm pos"""
         match self.pgm[self.pos]:
             case "+": self.plus()
             case "-": self.minus()
