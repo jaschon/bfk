@@ -9,11 +9,3 @@ b = BFK("//CODE HERE")
 b.run()
 
 ```
-
-## Test
-
-```
-cd test
-pytest .
-
-```
