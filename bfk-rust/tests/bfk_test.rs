@@ -9,7 +9,6 @@ mod tests {
         let mut b = BFK::new("+");
         b.step();
         assert_eq!(b.mem[b.ptr], 1);
-
     }
 
     #[test]
@@ -18,7 +17,6 @@ mod tests {
         b.mem[b.ptr] = 127;
         b.step();
         assert_eq!(b.mem[b.ptr], -128);
-
     }
 
     #[test]
@@ -26,7 +24,6 @@ mod tests {
         let mut b = BFK::new("-");
         b.step();
         assert_eq!(b.mem[b.ptr], -1);
-
     }
 
     #[test]
@@ -35,7 +32,6 @@ mod tests {
         b.mem[b.ptr] = -128;
         b.step();
         assert_eq!(b.mem[b.ptr], 127);
-
     }
 
     #[test]
@@ -44,15 +40,13 @@ mod tests {
         b.ptr = 1;
         b.step();
         assert_eq!(b.ptr, 0);
-
     }
 
     #[test]
     fn test_mem_l_wrap() {
         let mut b = BFK::new("<");
         b.step();
-        assert_eq!(b.ptr, MEMSIZE-1);
-
+        assert_eq!(b.ptr, MEMSIZE - 1);
     }
 
     #[test]
@@ -60,16 +54,14 @@ mod tests {
         let mut b = BFK::new(">");
         b.step();
         assert_eq!(b.ptr, 1);
-
     }
 
     #[test]
     fn test_mem_r_wrap() {
         let mut b = BFK::new(">");
-        b.ptr = MEMSIZE-1;
+        b.ptr = MEMSIZE - 1;
         b.step();
         assert_eq!(b.ptr, 0);
-
     }
 
     #[test]
@@ -93,7 +85,6 @@ mod tests {
         assert_eq!(b.mem[1], 2);
     }
 
-
     #[test]
     fn test_loop_double() {
         let mut b = BFK::new("++[>++[>+<-]<-]");
@@ -101,14 +92,12 @@ mod tests {
         assert_eq!(b.mem[2], 4);
     }
 
-
     #[test]
     fn test_loop_triple() {
         let mut b = BFK::new("++[>++[>++[>+<-]<-]<-]");
         b.run();
         assert_eq!(b.mem[3], 8);
     }
-
 
     #[test]
     fn test_bad_opcodes() {
@@ -123,14 +112,12 @@ mod tests {
         assert_eq!(b.mem[1], 2);
     }
 
-
     #[test]
     fn test_characters_neg_wrap() {
         let b = BFK::new("");
         let num = b.convert(-1);
         assert_eq!(num as i32, 65535);
     }
-
 
     #[test]
     fn test_characters_neg_wrap_full() {
@@ -152,7 +139,4 @@ mod tests {
         let num = b.convert(65536);
         assert_eq!(num as i32, 0);
     }
-
 }
-
-
