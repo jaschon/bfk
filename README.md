@@ -3,6 +3,7 @@ Brainf*ck programming language interpreter in multiple languages.
 
 - Python
 - Rust
+- C
 
 https://en.wikipedia.org/wiki/Brainfuck
 
